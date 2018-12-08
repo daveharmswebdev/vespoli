@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20181126032623_initial.cs" />
+    <Compile Remove="Migrations\20181202125527_addPasswordHash.cs" />
+    <Compile Remove="Migrations\20181202234240_extendRowerWorkout.cs" />
+    <Compile Remove="Migrations\20181203001125_initialPart2.cs" />
+    <Compile Remove="Migrations\20181203002346_initialPart3.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vespoli.Domain\Vespoli.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

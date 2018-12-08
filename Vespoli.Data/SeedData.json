@@ -1,0 +1,82 @@
+[
+  {
+    "Username": "Morse",
+    "DateOfBirth": "2004-10-27",
+    "Password": "password",
+    "School": "MBA",
+    "Created": "2018-10-04",
+    "Introduction": "Aliqua consectetur est est non enim est et. Eu fugiat exercitation id do adipisicing ad dolor incididunt elit. Culpa sunt incididunt ea sit amet esse. Aliquip commodo eu officia elit esse veniam velit fugiat sunt minim in fugiat ipsum dolor. Ullamco elit adipisicing amet cillum velit laborum eiusmod sint exercitation. Dolore aliquip commodo nisi nulla. Commodo magna laborum mollit ullamco pariatur cillum magna culpa.\r\n",
+    "Workouts": [
+      {
+        "WorkoutDate": "2018-12-04",
+        "Distance": 2000,
+        "WorkoutTime": 421000,
+        "Note": "Reprehenderit incididunt proident dolore sint aliqua irure."
+      }
+    ]
+  },
+  {
+    "Username": "Mathis",
+    "DateOfBirth": "2004-04-28",
+    "Password": "password",
+    "School": "MBA",
+    "Created": "2018-10-24",
+    "Introduction": "Ipsum mollit velit ullamco nulla non culpa commodo. Id commodo labore deserunt ad enim culpa minim sunt consequat enim aute in. Sit laboris commodo qui velit veniam do ad labore Lorem. Ex sit aute pariatur Lorem commodo cupidatat in excepteur cupidatat amet aliquip reprehenderit. Occaecat anim magna duis Lorem eu in. Pariatur anim ex ullamco aute eiusmod aute ex elit exercitation ad exercitation irure labore.\r\n",
+    "Workouts": [
+      {
+        "WorkoutDate": "2018-11-19",
+        "Distance": 2000,
+        "WorkoutTime": 421000,
+        "Note": "Nulla nisi qui velit dolor ea cillum minim sint ipsum sint minim."
+      }
+    ]
+  },
+  {
+    "Username": "Lambert",
+    "DateOfBirth": "2004-05-19",
+    "Password": "password",
+    "School": "MBA",
+    "Created": "2018-10-04",
+    "Introduction": "Tempor aliqua cupidatat cupidatat est fugiat veniam elit aute exercitation elit. Aliquip culpa voluptate elit veniam nostrud ad. Elit fugiat id ad dolore ipsum ea dolor. Aute duis eu in duis. Mollit sunt fugiat duis cupidatat fugiat excepteur anim occaecat proident occaecat aliquip sint.\r\n",
+    "Workouts": [
+      {
+        "WorkoutDate": "2018-12-07",
+        "Distance": 2000,
+        "WorkoutTime": 421000,
+        "Note": "Proident cupidatat irure ex pariatur consequat ea ad laborum deserunt."
+      }
+    ]
+  },
+  {
+    "Username": "Summers",
+    "DateOfBirth": "2004-11-13",
+    "Password": "password",
+    "School": "MBA",
+    "Created": "2018-10-05",
+    "Introduction": "Velit est non irure sit id consequat cupidatat adipisicing do. Cupidatat ut ex ea nostrud proident proident ullamco in cupidatat ipsum. Dolore minim duis culpa dolore commodo. Pariatur enim eu ipsum laboris excepteur do dolore commodo commodo anim laboris. Nulla magna non eiusmod reprehenderit incididunt.\r\n",
+    "Workouts": [
+      {
+        "WorkoutDate": "2018-11-27",
+        "Distance": 2000,
+        "WorkoutTime": 421000,
+        "Note": "Labore reprehenderit reprehenderit qui est ipsum exercitation culpa mollit esse culpa."
+      }
+    ]
+  },
+  {
+    "Username": "Howe",
+    "DateOfBirth": "2004-05-21",
+    "Password": "password",
+    "School": "MBA",
+    "Created": "2018-10-04",
+    "Introduction": "Nostrud labore ex eu nostrud incididunt nisi aute aliqua id tempor laborum nostrud voluptate. Consectetur adipisicing qui ullamco incididunt Lorem culpa mollit. Ea tempor mollit nisi Lorem et ad proident ut dolore fugiat dolore enim aute.\r\n",
+    "Workouts": [
+      {
+        "WorkoutDate": "2018-12-23",
+        "Distance": 2000,
+        "WorkoutTime": 421000,
+        "Note": "Amet magna anim incididunt anim irure non Lorem minim minim culpa magna ullamco incididunt."
+      }
+    ]
+  }
+]
