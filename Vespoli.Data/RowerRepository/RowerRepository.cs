@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vespoli.Domain;
@@ -8,10 +9,12 @@ namespace Vespoli.Data
     public class RowerRepository : IRowerRepository
     {
         private readonly VespoliContext _context;
+        private readonly ILogger<RowerRepository> _logger;
 
-        public RowerRepository(VespoliContext context)
+        public RowerRepository(VespoliContext context, ILogger<RowerRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
         public void Add<T>(T entity) where T : class
         {

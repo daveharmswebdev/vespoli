@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Logging;
 
 namespace Vespoli.Api.Controllers
 {
@@ -18,64 +19,82 @@ namespace Vespoli.Api.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        public AuthController(IAuthRepository repo, IConfiguration config, ILogger<AuthController> logger)
         {
             _repo = repo;
             _config = config;
+            _logger = logger;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RowerForRegisterDto rowerForRegisterDto)
         {
-            rowerForRegisterDto.UserName = rowerForRegisterDto.UserName.ToLower();
-
-            if (await _repo.UserExists(rowerForRegisterDto.UserName))
-                return BadRequest("Username already exists");
-
-            var rowerToCreate = new Rower
+            try
             {
-                UserName = rowerForRegisterDto.UserName
-            };
+                rowerForRegisterDto.UserName = rowerForRegisterDto.UserName.ToLower();
 
-            var createdUser = await _repo.Register(rowerToCreate, rowerForRegisterDto.Password);
+                if (await _repo.UserExists(rowerForRegisterDto.UserName))
+                    return BadRequest("Username already exists");
 
-            return StatusCode(201);
+                var rowerToCreate = new Rower
+                {
+                    UserName = rowerForRegisterDto.UserName
+                };
+
+                var createdUser = await _repo.Register(rowerToCreate, rowerForRegisterDto.Password);
+
+                return StatusCode(201);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to register new user: {ex}");
+                return BadRequest($"Failed to register new user.");
+            }
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(RowerForLoginDto rowerForLoginDto)
         {
-            var rowerFromRepo = await _repo.Login(rowerForLoginDto.UserName.ToLower(), rowerForLoginDto.Password);
-
-            if (rowerFromRepo == null)
-                return Unauthorized();
-
-            var claims = new[]
+            try
             {
-                new Claim(ClaimTypes.NameIdentifier, rowerFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, rowerFromRepo.UserName)
-            };
+                var rowerFromRepo = await _repo.Login(rowerForLoginDto.UserName.ToLower(), rowerForLoginDto.Password);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+                if (rowerFromRepo == null)
+                    return Unauthorized();
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, rowerFromRepo.Id.ToString()),
+                    new Claim(ClaimTypes.Name, rowerFromRepo.UserName)
+                };
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.Now.AddDays(1),
+                    SigningCredentials = creds
+                };
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+
+                return Ok(new
+                {
+                    token = tokenHandler.WriteToken(token)
+                });
+            }
+            catch (Exception ex)
             {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token)
-            });
+                _logger.LogError($"Failed to login user: {ex}");
+                return BadRequest($"Failed to login user.");
+            }
         }
     }
 }

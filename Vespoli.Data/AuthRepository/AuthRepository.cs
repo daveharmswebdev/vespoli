@@ -4,15 +4,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Vespoli.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Vespoli.Data
 {
     public class AuthRepository : IAuthRepository
     {
         private readonly VespoliContext _context;
-        public AuthRepository(VespoliContext context)
+        private readonly ILogger<AuthRepository> _logger;
+
+        public AuthRepository(VespoliContext context, ILogger<AuthRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<Rower> Login(string username, string password)

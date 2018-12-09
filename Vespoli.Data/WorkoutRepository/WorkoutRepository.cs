@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Vespoli.Domain;
 
 namespace Vespoli.Data
@@ -9,10 +10,12 @@ namespace Vespoli.Data
     public class WorkoutRepository : IWorkoutRepository
     {
         private readonly VespoliContext _context;
+        private readonly ILogger<WorkoutRepository> _logger;
 
-        public WorkoutRepository(VespoliContext context)
+        public WorkoutRepository(VespoliContext context, ILogger<WorkoutRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
         public void Add<T>(T entity) where T : class
         {

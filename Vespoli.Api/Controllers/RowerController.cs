@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,13 @@ namespace Vespoli.Api.Controllers
     {
         private readonly IRowerRepository _repo;
         private readonly IMapper _mapper;
+        private readonly ILogger<RowerController> _logger;
 
-        public RowerController(IRowerRepository repo, IMapper mapper)
+        public RowerController(IRowerRepository repo, IMapper mapper, ILogger<RowerController> logger)
         {
             _repo = repo;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -38,8 +41,9 @@ namespace Vespoli.Api.Controllers
 
                 return Ok(rowersToReturn);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
+                _logger.LogError($"Failed to get rowers: {ex}");
                 return BadRequest("Failed to get rowers");                
             }
         }
@@ -47,27 +51,47 @@ namespace Vespoli.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRowerById(int id)
         {
-            var rower = await _repo.GetSingleRower(id);
+            try
+            {
+                var rower = await _repo.GetSingleRower(id);
+                
+                var rowerToReturn = _mapper.Map<RowerForDetailDto>(rower);
+                    
+                return Ok(rowerToReturn);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get rower with id {id}: {ex}");
+                return BadRequest("Failed to get rower with id {id}");                
+            }
 
-            var rowerToReturn = _mapper.Map<RowerForDetailDto>(rower);
 
-            return Ok(rowerToReturn);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRower(int id, RowerForUpdateDto rowerForUpdateDto)
         {
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized();
+            try
+            {
+                if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                    return Unauthorized();
 
-            var rowerFromRepo = await _repo.GetSingleRower(id);
+                var rowerFromRepo = await _repo.GetSingleRower(id);
 
-            _mapper.Map(rowerForUpdateDto, rowerFromRepo);
+                _mapper.Map(rowerForUpdateDto, rowerFromRepo);
 
-            if (await _repo.SaveAll())
-                return NoContent();
+                if (await _repo.SaveAll())
+                    return NoContent();
 
-            throw new Exception($"Updating user {id} failed on save");
+                throw new Exception($"Updating user {id} failed on save");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to update rower with id {id}: {ex}");
+                return BadRequest($"Failed to update rower with id {id}");                
+            }
+
+
         }
     }
 }

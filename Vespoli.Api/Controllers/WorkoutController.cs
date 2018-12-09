@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Vespoli.Api.Dtos;
 using Vespoli.Data;
 using Vespoli.Domain;
@@ -18,11 +19,13 @@ namespace Vespoli.Api.Controllers
     {
         private readonly IWorkoutRepository _repo;
         private readonly IMapper _mapper;
+        private readonly ILogger<WorkoutController> _logger;
 
-        public WorkoutController(IWorkoutRepository repo, IMapper mapper)
+        public WorkoutController(IWorkoutRepository repo, IMapper mapper, ILogger<WorkoutController> logger)
         {
             _repo = repo;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet("{rowerId}/workout")]
@@ -38,7 +41,8 @@ namespace Vespoli.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Failed to get workouts, {ex}");
+                _logger.LogError($"Failed to get workouts: {ex}");
+                return BadRequest("Failed to get workouts");
             }
         }
 
@@ -51,8 +55,9 @@ namespace Vespoli.Api.Controllers
 
                 return Ok(workout);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
+                _logger.LogError($"Failed to get workout: {ex}");
                 return BadRequest("Failed to get workout");
             }
         }
@@ -77,7 +82,7 @@ namespace Vespoli.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Failed to add workout {ex}");
+                _logger.LogError($"Failed to add workout: {ex}");
             }
             
             return BadRequest($"Failed to add workout");
