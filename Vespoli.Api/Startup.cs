@@ -64,7 +64,7 @@ namespace Vespoli.Api
                 app.UseHsts();
             }
 
-            //seeder.SeedUsers();
+            seeder.SeedUsers();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();

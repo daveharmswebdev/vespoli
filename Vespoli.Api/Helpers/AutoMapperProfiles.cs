@@ -27,6 +27,7 @@ namespace Vespoli.Api.Helpers
             CreateMap<Rower, RowerForWorkoutDto>(); 
             CreateMap<RowerForUpdateDto, Rower>();
             CreateMap<WorkoutForAddDto, Workout>().ReverseMap();
+            CreateMap<WorkoutForUpdateDto, Workout>();
         }
     }
 }

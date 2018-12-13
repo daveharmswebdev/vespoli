@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -84,8 +85,52 @@ namespace Vespoli.Api.Controllers
             {
                 _logger.LogError($"Failed to add workout: {ex}");
             }
-            
+
             return BadRequest($"Failed to add workout");
+        }
+
+        [HttpDelete("{rowerId}/workout/{id}")]
+        public async Task<IActionResult> RemoveWorkout(int rowerId, int id)
+        {
+            try
+            {
+                if (rowerId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                    return Unauthorized();
+
+                var workout = await _repo.GetSingleWorkout(rowerId, id);
+                _repo.Delete(workout);
+                if (await _repo.SaveAll())
+                    return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to delete workout {id}: {ex}");
+            }
+            return BadRequest($"Failed to delete workout");
+        }
+
+        [HttpPut("{rowerId}/workout/{id}")]
+        public async Task<IActionResult> UpdateWorkout(int rowerId, int id, WorkoutForUpdateDto workoutForUpdate)
+        {
+            try
+            {
+                if (rowerId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                    return Unauthorized();
+
+                var workoutFromRepo = await _repo.GetSingleWorkout(rowerId, id);
+
+                _mapper.Map(workoutForUpdate, workoutFromRepo);
+
+                if (await _repo.SaveAll())
+                    return NoContent();
+
+                throw new Exception($"Updating workout {id} for rower {rowerId} failed on save");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to update workout {id}: {ex}");
+            }
+            return BadRequest($"Failed to update workout");
         }
     }
 }
